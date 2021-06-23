@@ -100,32 +100,30 @@ class MappingLookup {
 }
 
 // ============================================== EXAMPLE RUNNER
-class NWayLookup {
-  static run() {
-    final m1 = Mapping(
-      path: "method_one",
-      requestType: Method1Request,
-      responseType: Method1Response,
-    );
+main() {
+  final m1 = Mapping(
+    path: "method_one",
+    requestType: Method1Request,
+    responseType: Method1Response,
+  );
 
-    final m2 = Mapping(
-      path: "method_two",
-      requestType: Method2Request,
-      responseType: Method2Response,
-    );
+  final m2 = Mapping(
+    path: "method_two",
+    requestType: Method2Request,
+    responseType: Method2Response,
+  );
 
-    final ml = MappingLookup([m1, m2]);
+  final ml = MappingLookup([m1, m2]);
 
-    void t() => throw "Mapping Error";
+  void t() => throw "Mapping Error";
 
-    if (m1 != ml.path(m1.path)) t();
-    if (m1 != ml.request(Method1Request())) t();
-    if (m1 != ml.response(Method1Response())) t();
+  if (m1 != ml.path(m1.path)) t();
+  if (m1 != ml.request(Method1Request())) t();
+  if (m1 != ml.response(Method1Response())) t();
 
-    if (m2 != ml.path(m2.path)) t();
-    if (m2 != ml.request(Method2Request())) t();
-    if (m2 != ml.response(Method2Response())) t();
+  if (m2 != ml.path(m2.path)) t();
+  if (m2 != ml.request(Method2Request())) t();
+  if (m2 != ml.response(Method2Response())) t();
 
-    print("works");
-  }
+  print("works");
 }

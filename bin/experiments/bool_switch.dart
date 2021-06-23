@@ -20,19 +20,19 @@
 /// );
 /// ```
 
+void main() {
+  String result = BoolSwitch.two(
+    exp1: false,
+    exp2: true,
+    tt: () => "tt",
+    tf: () => "tf",
+    ft: () => "ft",
+    ff: () => "ff",
+  );
+}
+
 class BoolSwitch {
   BoolSwitch._();
-
-  static void run() {
-    String result = BoolSwitch.two(
-      exp1: false,
-      exp2: true,
-      tt: () => "tt",
-      tf: () => "tf",
-      ft: () => "ft",
-      ff: () => "ff",
-    );
-  }
 
   static T two<T>({
     required bool exp1,

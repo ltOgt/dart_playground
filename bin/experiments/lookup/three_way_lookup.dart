@@ -18,59 +18,57 @@ class T2A extends TABase {}
 
 class T2B extends TBBase {}
 
-class ThreeWayLookup {
-  static run() {
-    testNL3();
-    testNL();
-    testMapping();
-  }
+void main() {
+  testNL3();
+  testNL();
+  testMapping();
+}
 
-  static void testNL3() {
-    final t1 = Triple<String, Type, Type>("t1", T1A, T1B);
-    final t2 = Triple<String, Type, Type>("t2", T2A, T2B);
+void testNL3() {
+  final t1 = Triple<String, Type, Type>("t1", T1A, T1B);
+  final t2 = Triple<String, Type, Type>("t2", T2A, T2B);
 
-    // S | can not distinguish between type of types ie Type(T1A) and Type(T1B)
-    var nl3 = NLookup3<String, Type, Type>([t1, t2]);
+  // S | can not distinguish between type of types ie Type(T1A) and Type(T1B)
+  var nl3 = NLookup3<String, Type, Type>([t1, t2]);
 
-    var r1 = nl3.lookup("t1");
-    var r2 = nl3.lookup("t2");
-    // S | can not distinguish between type of types ie Type(T1A) and Type(T1B)
-    // finds r3 since TABase is first, TBBase is also Type but not contained in second slot
-    var r3 = nl3.lookup(T1A);
-    var r4 = nl3.lookup(T2B);
-  }
+  var r1 = nl3.lookup("t1");
+  var r2 = nl3.lookup("t2");
+  // S | can not distinguish between type of types ie Type(T1A) and Type(T1B)
+  // finds r3 since TABase is first, TBBase is also Type but not contained in second slot
+  var r3 = nl3.lookup(T1A);
+  var r4 = nl3.lookup(T2B);
+}
 
-  static void testNL() {
-    // This works since we loop over all slots
-    var nl = NLookup([
-      ["t1", T1A, T1B],
-      ["t2", T2A, T2B]
-    ]);
+void testNL() {
+  // This works since we loop over all slots
+  var nl = NLookup([
+    ["t1", T1A, T1B],
+    ["t2", T2A, T2B]
+  ]);
 
-    var r1 = nl.lookup("t1");
-    var r2 = nl.lookup("t2");
-    var r3 = nl.lookup(T1A);
-    var r4 = nl.lookup(T2B);
-  }
+  var r1 = nl.lookup("t1");
+  var r2 = nl.lookup("t2");
+  var r3 = nl.lookup(T1A);
+  var r4 = nl.lookup(T2B);
+}
 
-  static void testMapping() {
-    final ml = MappingLookup([
-      Mapping(
-        path: "method_one",
-        requestType: Method1Request,
-        responseType: Method1Response,
-      ),
-      Mapping(
-        path: "method_two",
-        requestType: Method2Request,
-        responseType: Method2Response,
-      ),
-    ]);
+void testMapping() {
+  final ml = MappingLookup([
+    Mapping(
+      path: "method_one",
+      requestType: Method1Request,
+      responseType: Method1Response,
+    ),
+    Mapping(
+      path: "method_two",
+      requestType: Method2Request,
+      responseType: Method2Response,
+    ),
+  ]);
 
-    var r1 = ml.path("method_two");
-    var r2 = ml.request(Method1Request());
-    var r3 = ml.response(Method2Response());
-  }
+  var r1 = ml.path("method_two");
+  var r2 = ml.request(Method1Request());
+  var r3 = ml.response(Method2Response());
 }
 
 class Triple<A, B, C> {
