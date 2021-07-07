@@ -15,6 +15,4 @@ void main() {
 
   Type b = GenericBase;
   Type c = GenericChild;
-
-  // No way to check if c is subtype of b or GenericBase
 }
