@@ -2,12 +2,14 @@ name: dart_playground
 description: A simple command-line application.
 version: 1.0.0
 # homepage: https://www.example.com
+publish_to: none
 
 environment:
   sdk: '>=2.13.0 <3.0.0'
 
-# dependencies:
-#   path: ^1.8.0
+dependencies:
+  ltogt_utils:
+    path: /home/omni/repos/package/ltogt_utils
 
 dev_dependencies:
   lints: ^1.0.0
