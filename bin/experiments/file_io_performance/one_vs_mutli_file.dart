@@ -7,14 +7,14 @@ import 'package:ltogt_utils/ltogt_utils.dart';
 ///   . File structure considerations
 ///     § relationType
 ///       ~: `{"name": <name>, "slots": [...], "instances": [...]}`
-///       -- one file
-///         + human readability
-///         °+ quicker access if want whole file
-///         °- wasted time decoding unneeded info when only want § "instances"
-///       -- multi file
-///         - human readability
-///         °- slower access to whole information
-///         °+ only decoding needed info when only want § "instances"
+///     -- *[one file]
+///       + human readability
+///       °+ quicker access if want whole file
+///       °- wasted time decoding unneeded info when only want § "instances"
+///     -- *[multi file]
+///       - human readability
+///       °- slower access to whole information
+///       °+ only decoding needed info when only want § "instances"
 ///
 ///     0 measure both usecases for both approaches
 ///       e access of specific field
@@ -47,20 +47,20 @@ Future<void> test_specific() async {
 
   print("Read Specific");
   print("- List 1");
-  print("-- oneFile");
+  print("-- *[one file]");
   await runTimed(runs, readSpecific_list1_oneFile);
-  print("-- mutliFile");
+  print("-- *[multi file]");
   await runTimed(runs, readSpecific_list1_multiFile);
 
   /* (Aggregated over multiple manual runs picked at random)
   Read Specific
   - List 1
-  -- oneFile
+  -- *[one file]
   --- => avg 21.0ms over 1 runs (total=0:00:00.021983)
   --- => avg 25.0ms over 1 runs (total=0:00:00.025165)
   --- => avg 22.0ms over 1 runs (total=0:00:00.022218)
   --- => avg 22.0ms over 1 runs (total=0:00:00.022841)
-  -- mutliFile
+  -- *[multi file]
   --- => avg 1.0ms over 1 runs (total=0:00:00.001144)
   --- => avg 1.0ms over 1 runs (total=0:00:00.001286)
   --- => avg 0.0ms over 1 runs (total=0:00:00.000958)
@@ -92,9 +92,9 @@ Future<void> test_whole() async {
 
   print("Read Whole");
   print("- List 1");
-  print("-- oneFile");
+  print("-- *[one file]");
   await runTimed(runs, readWhole_oneFile);
-  print("-- mutliFile");
+  print("-- *[multi file]");
   await runTimed(runs, readWhole_multiFile);
 
   /* (Aggregated over multiple manual runs picked at random)
@@ -105,7 +105,7 @@ Future<void> test_whole() async {
   --- => avg 20.0ms over 1 runs (total=0:00:00.020165)
   --- => avg 19.0ms over 1 runs (total=0:00:00.019439)
   --- => avg 19.0ms over 1 runs (total=0:00:00.019516)
-  -- mutliFile
+  -- *[multi file]
   --- => avg 19.0ms over 1 runs (total=0:00:00.019160)
   --- => avg 19.0ms over 1 runs (total=0:00:00.019910)
   --- => avg 20.0ms over 1 runs (total=0:00:00.020556)
@@ -152,12 +152,12 @@ Future<void> readWhole_multiFile() async {
 ///     ```
 ///     Read Specific
 ///     - List 1
-///     -- oneFile
+///     -- *[one file]
 ///     --- => avg 21.0ms over 1 runs (total=0:00:00.021983)
 ///     --- => avg 25.0ms over 1 runs (total=0:00:00.025165)
 ///     --- => avg 22.0ms over 1 runs (total=0:00:00.022218)
 ///     --- => avg 22.0ms over 1 runs (total=0:00:00.022841)
-///     -- mutliFile
+///     -- *[multi file]
 ///     --- => avg 1.0ms over 1 runs (total=0:00:00.001144)
 ///     --- => avg 1.0ms over 1 runs (total=0:00:00.001286)
 ///     --- => avg 0.0ms over 1 runs (total=0:00:00.000958)
@@ -167,12 +167,12 @@ Future<void> readWhole_multiFile() async {
 ///     => about same performance
 ///     ```
 ///     - List 1
-///     -- oneFile
+///     -- *[one file]
 ///     --- => avg 19.0ms over 1 runs (total=0:00:00.019762)
 ///     --- => avg 20.0ms over 1 runs (total=0:00:00.020165)
 ///     --- => avg 19.0ms over 1 runs (total=0:00:00.019439)
 ///     --- => avg 19.0ms over 1 runs (total=0:00:00.019516)
-///     -- mutliFile
+///     -- *[multi file]
 ///     --- => avg 19.0ms over 1 runs (total=0:00:00.019160)
 ///     --- => avg 19.0ms over 1 runs (total=0:00:00.019910)
 ///     --- => avg 20.0ms over 1 runs (total=0:00:00.020556)
@@ -197,12 +197,12 @@ Future<void> readWhole_multiFile() async {
 ///     4,0K    ./name.json
 ///     ```
 ///
-///   -- one file
+///   -- *[one file]
 ///     : 4kb (4096 byte)
 ///       <- Size of one block
 ///         ( inode inline data may reduce this for small files )
 ///           // https://lwn.net/Articles/469805/
-///   -- mutli file
+///   -- *[multi file]
 ///     : 40kb
 ///     : n*4kb
 ///       <- Each data point occupies one block
@@ -225,3 +225,32 @@ Future<void> readWhole_multiFile() async {
 ///
 ///
 ///
+///
+///
+///
+/// ========================================
+/// > Results of primitive benchmark
+///   -- one file
+///     + *[space complexity] minimal
+///       ~ 4kByte per 4000 characters
+///     - *[single field access] json decode overhead
+///       [_] test for multiple json lengths to see how this grows roughly
+///         < even O(n) would still be a lot as files grow over time
+///     ~ *[whole file access] same time as mutli file approach
+///   -- *[multi file]
+///     - *[space complexity] overhead per field
+///       ~ 4kByte per 4000 characters per field
+///         ! less of a problem iff
+///           > few fields
+///           > number of fields ~constant over time
+///           > content of fields grows over time
+///           S single value fields that dont grow over time
+///             § name, type, color, ...
+///             ?= maybe group these single value fields in one svf.json file
+///     + *[single field access] no json decode overhead
+///     ~ *[whole file access] same time as one file approach
+///       [!] test this for larger files as well, but dont assume this changes much
+///
+///   => conside using *[multi file] approach iff
+///     x split data that is accessed alone
+///     ? group single field data
