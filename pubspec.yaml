@@ -5,11 +5,11 @@ version: 1.0.0
 publish_to: none
 
 environment:
-  sdk: '>=2.13.0 <3.0.0'
+  sdk: '>=2.17.0-0s <3.0.0'
 
 dependencies:
   ltogt_utils:
-    path: /home/omni/repos/package/ltogt_utils
+    path: ../package/ltogt_utils
 
 dev_dependencies:
   lints: ^1.0.0
